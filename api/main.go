@@ -19,38 +19,23 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
-	"os"
+
+	"sipub_teste/api/handlers"
+	"sipub_teste/api/storage"
 )
 
-// Varuável global para guardar os filmes em memória.
-var movies []Movie
+func main() {
 
-func main(){
-	if erro := loadMovies("teste_tecnico/movies.json"); erro != nil {
-		log.Fatal("Erro ao carregar filmes:", erro)
+	if erro := storage.LoadMovies("movies.json"); erro != nil {
+		log.Fatal("Erro ao carregar filmes: ", erro)
 	}
 
-	fmt.Printf("Carregando %d filmes \n", len(movies))
+	fmt.Printf("Carregando %d filmes\n", len(storage.GetAll()))
+	http.HandleFunc("GET /movies", handlers.GetMovies)
 
-	log.Fatal(http.ListenAndServe(":8080"), nil)
-}
+	log.Fatal(http.ListenAndServe(":8080", nil))
 
-
-type Movie struct {
-    ID    int    `json:"id"`
-    Title string `json:"title"`
-    Year  string `json:"year"`
-}
-
-func loadMovies(filename string) error {
-	file, erro := os.ReadFile(filename)
-	if erro != nil {
-		return erro
-	}
-
-	return json.Unmarshal(file, &movies)
 }
