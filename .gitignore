@@ -1,0 +1,65 @@
+# =========================
+# Binários compilados
+# =========================
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.out
+
+# Executáveis gerados
+main
+app
+
+# Diretório de build (caso utilize)
+bin/
+dist/
+build/
+
+# =========================
+# Cobertura de testes
+# =========================
+*.test
+*.cover
+coverage.out
+
+# =========================
+# Arquivos de profiling
+# =========================
+*.prof
+*.pprof
+
+# =========================
+# IDEs
+# =========================
+
+# VS Code
+.vscode/
+
+# JetBrains (GoLand)
+.idea/
+
+# =========================
+# Sistema operacional
+# =========================
+
+# macOS
+.DS_Store
+
+# Linux
+*~
+
+# Windows
+Thumbs.db
+
+# =========================
+# Variáveis de ambiente
+# =========================
+.env
+.env.*
+
+# =========================
+# Logs
+# =========================
+*.log
