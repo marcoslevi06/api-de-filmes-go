@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 # Builda as imagens do MongoDB e da API, sobe os dois em containers
 # efêmeros na mesma rede Docker (sem volume — os dados duram só enquanto
-# o script estiver rodando) e conecta um ao outro. Ao encerrar (Ctrl+C),
-# os containers são removidos automaticamente. Uso: ./start.sh
+# o script estiver rodando) e conecta um ao outro. Também sobe um
+# container com a documentação Swagger (docs/swagger.yaml). Ao encerrar
+# (Ctrl+C), todos os containers são removidos automaticamente.
+# Uso: ./start.sh
 
 set -euo pipefail
 
@@ -10,6 +12,7 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 API_DIR="$ROOT_DIR/api"
 MONGO_DOCKERFILE="$ROOT_DIR/docker/mongo/Dockerfile"
 API_DOCKERFILE="$ROOT_DIR/docker/api/Dockerfile"
+SWAGGER_SPEC="$ROOT_DIR/docs/swagger.yaml"
 
 NETWORK="sipub-net"
 
@@ -21,6 +24,10 @@ API_IMAGE="sipub-api:local"
 API_CONTAINER="sipub-api"
 API_PORT="8080"
 
+SWAGGER_IMAGE="swaggerapi/swagger-ui"
+SWAGGER_CONTAINER="sipub-swagger-ui"
+SWAGGER_PORT="8081"
+
 export MONGO_DB="${MONGO_DB:-sipub}"
 export MONGO_COLLECTION="${MONGO_COLLECTION:-movies}"
 MONGO_URI="${MONGO_URI:-mongodb://${MONGO_CONTAINER}:${MONGO_PORT}}"
@@ -28,7 +35,7 @@ MONGO_URI="${MONGO_URI:-mongodb://${MONGO_CONTAINER}:${MONGO_PORT}}"
 cleanup() {
   echo
   echo "==> Encerrando e removendo os containers..."
-  docker rm -f "$API_CONTAINER" "$MONGO_CONTAINER" >/dev/null 2>&1 || true
+  docker rm -f "$API_CONTAINER" "$MONGO_CONTAINER" "$SWAGGER_CONTAINER" >/dev/null 2>&1 || true
 }
 trap cleanup EXIT
 
@@ -58,6 +65,14 @@ done
 
 echo "==> Construindo imagem da API..."
 docker build -t "$API_IMAGE" -f "$API_DOCKERFILE" "$API_DIR"
+
+echo "==> Subindo a documentação Swagger em http://localhost:${SWAGGER_PORT}..."
+docker rm -f "$SWAGGER_CONTAINER" >/dev/null 2>&1 || true
+docker run -d --name "$SWAGGER_CONTAINER" \
+  -p "${SWAGGER_PORT}:8080" \
+  -e SWAGGER_JSON=/spec/swagger.yaml \
+  -v "${SWAGGER_SPEC}:/spec/swagger.yaml" \
+  "$SWAGGER_IMAGE" >/dev/null
 
 echo "==> Subindo a API Go em http://localhost:${API_PORT} (Ctrl+C para encerrar)..."
 docker rm -f "$API_CONTAINER" >/dev/null 2>&1 || true

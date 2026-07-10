@@ -14,10 +14,10 @@ cd sipub_teste
 ./start.sh
 ```
 
-O script sobe dois containers — API (porta `8080`) e MongoDB (porta
-`27017`) — na mesma rede Docker, carrega os filmes iniciais no banco e
-deixa a API pronta em `http://localhost:8080`. `Ctrl+C` encerra e remove
-os dois containers.
+O script sobe três containers — API (porta `8080`), MongoDB (porta
+`27017`) e a documentação Swagger (porta `8081`) — carrega os filmes
+iniciais no banco e deixa a API pronta em `http://localhost:8080`.
+`Ctrl+C` encerra e remove os três containers.
 
 Os dados não persistem entre execuções: a cada `./start.sh`, o Mongo sobe
 vazio e é populado de novo a partir de `movies.json`.
@@ -32,7 +32,8 @@ sipub_teste/
 │   └── mongo/Dockerfile
 ├── docs/
 │   ├── fluxograma.drawio     # diagrama da arquitetura e do fluxo
-│   └── testes-curl.md        # roteiro de testes manuais via curl
+│   ├── testes-curl.md        # roteiro de testes manuais via curl
+│   └── swagger.yaml          # especificação OpenAPI da API
 └── api/
     ├── cmd/api/main.go
     ├── movies.json
@@ -70,8 +71,15 @@ Diagrama completo em [`docs/fluxograma.drawio`](docs/fluxograma.drawio)
 Exemplos de uso com curl (requisição, resposta e erros) em
 [`docs/testes-curl.md`](docs/testes-curl.md).
 
-## Variáveis de ambiente
+Especificação OpenAPI/Swagger completa (schemas de request/response) em
+[`docs/swagger.yaml`](docs/swagger.yaml). O `./start.sh` já sobe a
+documentação interativa em `http://localhost:8081` automaticamente —
+não precisa de nenhum passo extra.
 
+Alternativa sem Docker: colar o conteúdo do arquivo em
+[editor.swagger.io](https://editor.swagger.io).
+
+## Variáveis de ambiente - (Já definidas como padrão no arquivo start.sh)
 | Variável | Padrão |
 |---|---|
 | `MONGO_DB` | `sipub` |

@@ -1,0 +1,162 @@
+openapi: 3.0.3
+info:
+  title: API de Filmes
+  description: >
+    CRUD de filmes em Go, persistido em MongoDB, organizado em arquitetura
+    hexagonal (ports & adapters).
+  version: "1.0.0"
+servers:
+  - url: http://localhost:8080
+    description: Servidor local (subido via ./start.sh)
+
+paths:
+  /movies:
+    get:
+      summary: Lista todos os filmes
+      operationId: listMovies
+      responses:
+        "200":
+          description: Lista de filmes cadastrados
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Movie"
+    post:
+      summary: Cria um novo filme
+      operationId: createMovie
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MovieInput"
+      responses:
+        "201":
+          description: Filme criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Movie"
+        "400":
+          description: Corpo da requisição não é um JSON válido
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/ErroTexto"
+              example: "Estrutura inválida."
+
+  /movies/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: Identificador numérico do filme
+        schema:
+          type: integer
+        example: 8
+    get:
+      summary: Busca um filme pelo id
+      operationId: getMovie
+      responses:
+        "200":
+          description: Filme encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Movie"
+        "400":
+          description: id informado não é um número inteiro
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/ErroTexto"
+              example: "ID inválido."
+        "404":
+          description: Nenhum filme com esse id
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/ErroTexto"
+              example: "Filme não encontrado - Tente buscar outro ID."
+    put:
+      summary: Atualiza um filme existente
+      description: Rota extra, não exigida pelo enunciado original.
+      operationId: updateMovie
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MovieInput"
+      responses:
+        "200":
+          description: Filme atualizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Movie"
+        "400":
+          description: id inválido ou corpo da requisição inválido
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/ErroTexto"
+        "404":
+          description: Nenhum filme com esse id
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/ErroTexto"
+              example: "Filme não encontrado - Tente buscar outro ID."
+    delete:
+      summary: Remove um filme
+      operationId: deleteMovie
+      responses:
+        "204":
+          description: Filme removido com sucesso, sem corpo na resposta
+        "400":
+          description: id informado não é um número inteiro
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/ErroTexto"
+              example: "ID inválido."
+        "404":
+          description: Nenhum filme com esse id
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/ErroTexto"
+              example: "Filme não encontrado - Tente buscar outro ID."
+
+components:
+  schemas:
+    Movie:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 8
+        title:
+          type: string
+          example: "Edison Kinetoscopic Record of a Sneeze (1894)"
+        year:
+          type: string
+          example: "1894"
+    MovieInput:
+      type: object
+      required:
+        - title
+        - year
+      properties:
+        title:
+          type: string
+          example: "Duna"
+        year:
+          type: string
+          example: "2021"
+    ErroTexto:
+      type: string
+      description: Mensagem de erro em texto simples (não é JSON)
