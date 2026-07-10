@@ -1,8 +1,7 @@
-# API de Filmes — Teste Técnico Backend Go
+# API de Filmes
 
 CRUD de filmes em Go, persistido em MongoDB, com arquitetura hexagonal
-(ports & adapters). Enunciado original em
-`Teste Técnico – Desenvolvedor Back-end Go.pdf`, na raiz do repositório.
+(ports & adapters).
 
 ## Como rodar
 
@@ -78,10 +77,3 @@ Exemplos de uso com curl (requisição, resposta e erros) em
 | `MONGO_DB` | `sipub` |
 | `MONGO_COLLECTION` | `movies` |
 | `MONGO_URI` | `mongodb://sipub-mongo:27017` |
-
-## Desvio do enunciado
-
-O enunciado pede 3 containers (API Gateway, Serviço Movies e MongoDB),
-com gRPC entre Gateway e Movies. Este projeto entrega 2 containers (API
-única + Mongo), comunicando-se em REST/JSON — decisão consciente, por
-falta de experiência prévia com gRPC.
