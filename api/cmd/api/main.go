@@ -1,24 +1,44 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	httpadapter "sipub_teste/api/internal/adapter/http"
-	"sipub_teste/api/internal/adapter/memory"
+	mongoadapter "sipub_teste/api/internal/adapter/mongo"
 	"sipub_teste/api/internal/usecase"
 )
 
-// main é o ponto de entrada da aplicação. Monta as dependências (repositório
-// em memória, service e handler HTTP), carrega os filmes a partir de
-// "movies.json", registra as rotas da API de filmes e sobe o servidor HTTP
-// na porta 8080.
+// getEnv retorna o valor da variável de ambiente chave, ou padrao caso ela
+// não esteja definida.
+func getEnv(chave, padrao string) string {
+	if valor := os.Getenv(chave); valor != "" {
+		return valor
+	}
+	return padrao
+}
+
+// main é o ponto de entrada da aplicação. Monta as dependências
+// (repositório MongoDB, service e handler HTTP), carrega os filmes a
+// partir de "movies.json" (apenas na primeira execução), registra as
+// rotas da API de filmes e sobe o servidor HTTP na porta 8080.
 func main() {
 
-	repo := memory.NewMovieRepository()
+	ctx := context.Background()
 
-	if erro := repo.LoadMovies("movies.json"); erro != nil {
+	mongoURI := getEnv("MONGO_URI", "mongodb://localhost:27017")
+	mongoDB := getEnv("MONGO_DB", "sipub")
+	mongoCollection := getEnv("MONGO_COLLECTION", "movies")
+
+	repo, erro := mongoadapter.NewMovieRepository(ctx, mongoURI, mongoDB, mongoCollection)
+	if erro != nil {
+		log.Fatal("Erro ao conectar no MongoDB: ", erro)
+	}
+
+	if erro := repo.LoadMovies(ctx, "movies.json"); erro != nil {
 		log.Fatal("Erro ao carregar filmes: ", erro)
 	}
 

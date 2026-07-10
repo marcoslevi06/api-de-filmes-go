@@ -25,7 +25,7 @@ func NewMovieHandler(service *usecase.MovieService) *MovieHandler {
 // GetMovies trata GET /movies. Busca todos os filmes através do
 // MovieService e responde com um JSON contendo a lista completa.
 func (h *MovieHandler) GetMovies(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("[GET] Entramos em Handler.GetMovies")
+	fmt.Println("Entramos na rota GetMovies...")
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(h.service.ListAll())
 
@@ -36,8 +36,8 @@ func (h *MovieHandler) GetMovies(w http.ResponseWriter, r *http.Request) {
 // Responde 400 se o ID for inválido, 404 se o filme não existir, ou o
 // filme em JSON em caso de sucesso.
 func (h *MovieHandler) GetMovie(w http.ResponseWriter, r *http.Request) {
-
 	id_parametro := r.PathValue("id")
+	fmt.Println("Entramos na rota GetByID... ID requisitado:", id_parametro)
 
 	id, err := strconv.Atoi(id_parametro)
 	if err != nil {
@@ -61,6 +61,8 @@ func (h *MovieHandler) GetMovie(w http.ResponseWriter, r *http.Request) {
 // ID) e responde 201 com o filme criado em JSON. Responde 400 se o corpo
 // não puder ser decodificado.
 func (h *MovieHandler) PostCreateMovie(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Entramos na rota PostCreateMovie...")
+
 	var filme domain.Movie
 
 	err := json.NewDecoder(r.Body).Decode(&filme)
@@ -83,6 +85,7 @@ func (h *MovieHandler) PostCreateMovie(w http.ResponseWriter, r *http.Request) {
 // existir, ou o filme atualizado em JSON em caso de sucesso.
 func (h *MovieHandler) PutUpdateMovie(w http.ResponseWriter, r *http.Request) {
 	idParametro := r.PathValue("id")
+	fmt.Println("Entramos na rota PutUpdateMovie... ID requisitado:", idParametro)
 
 	id, err := strconv.Atoi(idParametro)
 	if err != nil {
@@ -113,6 +116,7 @@ func (h *MovieHandler) PutUpdateMovie(w http.ResponseWriter, r *http.Request) {
 // existir, ou 204 (sem corpo) em caso de sucesso.
 func (h *MovieHandler) DeleteMovie(w http.ResponseWriter, r *http.Request) {
 	idParametro := r.PathValue("id")
+	fmt.Println("Entramos na rota DeleteMovie... ID requisitado:", idParametro)
 
 	id, err := strconv.Atoi(idParametro)
 	if err != nil {
