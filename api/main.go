@@ -35,6 +35,8 @@ func main() {
 
 	fmt.Printf("Carregando %d filmes\n", len(storage.GetAll()))
 	http.HandleFunc("GET /movies", handlers.GetMovies)
+	http.HandleFunc("GET /movies/{id}", handlers.GetMovie)
+	http.HandleFunc("POST /movies", handlers.PostCreateMovie)
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 

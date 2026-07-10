@@ -1,0 +1,112 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Fluxo do código" id="fluxo-api">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Background groupings -->
+        <mxCell id="bgLeft" value="Inicializacao (executa 1x, ao rodar o programa)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#999999;dashed=1;verticalAlign=top;align=left;spacingLeft=10;spacingTop=6;fontSize=14;fontStyle=1;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="20" y="40" width="380" height="1040" as="geometry" />
+        </mxCell>
+        <mxCell id="bgRight" value="Cada requisicao HTTP (executa a cada GET /movies)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#999999;dashed=1;verticalAlign=top;align=left;spacingLeft=10;spacingTop=6;fontSize=14;fontStyle=1;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="420" y="1080" width="380" height="610" as="geometry" />
+        </mxCell>
+        <mxCell id="bgState" value="Estado compartilhado (pacotes storage / models)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#999999;dashed=1;verticalAlign=top;align=left;spacingLeft=10;spacingTop=6;fontSize=14;fontStyle=1;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="760" y="610" width="340" height="300" as="geometry" />
+        </mxCell>
+
+        <!-- LEFT COLUMN: startup flow -->
+        <mxCell id="n1" value="Executa: go run main.go" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="60" y="80" width="280" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="n2" value="main() e executado" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="60" y="170" width="280" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="n3" value="storage.LoadMovies(&quot;movies.json&quot;)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="60" y="270" width="280" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="n4" value="os.ReadFile(filename) le o arquivo" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="60" y="370" width="280" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="n5" value="Erro na leitura?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="80" y="470" width="240" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="n6" value="log.Fatal(erro)&#10;programa e encerrado" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="420" y="490" width="240" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="n7" value="json.Unmarshal(file, &amp;movies)&#10;preenche o slice em storage" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="60" y="600" width="280" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="n8" value="fmt.Printf: imprime len(storage.GetAll())" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="60" y="700" width="280" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="n9" value="http.HandleFunc(&quot;GET /movies&quot;, handlers.GetMovies)&#10;registra a rota" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="60" y="800" width="280" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="n10" value="http.ListenAndServe(&quot;:8080&quot;, nil)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="60" y="900" width="280" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="n11" value="Servidor ativo, aguardando requisicoes" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="60" y="1000" width="280" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- RIGHT COLUMN: request flow -->
+        <mxCell id="r1" value="Cliente faz requisicao&#10;GET /movies" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="460" y="1120" width="280" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="r2" value="Go roteia para handlers.GetMovies(w, r)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="460" y="1210" width="280" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="r3" value="w.Header().Set(&quot;Content-Type&quot;, &quot;application/json&quot;)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="460" y="1310" width="280" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="r4" value="storage.GetAll() retorna []models.Movie" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="460" y="1410" width="280" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="r5" value="json.NewEncoder(w).Encode(movies)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="460" y="1510" width="280" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="r6" value="Resposta JSON enviada ao cliente" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="460" y="1610" width="280" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Shared state -->
+        <mxCell id="ms" value="storage.movies&#10;[]models.Movie (em memoria)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="800" y="650" width="260" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="mt" value="models.Movie&#10;{ ID int, Title string, Year string }" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="800" y="780" width="260" height="100" as="geometry" />
+        </mxCell>
+
+        <!-- Edges: left column -->
+        <mxCell id="e1" style="orthogonalEdgeStyle;html=1;" edge="1" parent="1" source="n1" target="n2"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e2" style="orthogonalEdgeStyle;html=1;" edge="1" parent="1" source="n2" target="n3"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e3" style="orthogonalEdgeStyle;html=1;" edge="1" parent="1" source="n3" target="n4"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e4" style="orthogonalEdgeStyle;html=1;" edge="1" parent="1" source="n4" target="n5"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e5" value="Sim" style="orthogonalEdgeStyle;html=1;" edge="1" parent="1" source="n5" target="n6"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e6" value="Nao" style="orthogonalEdgeStyle;html=1;" edge="1" parent="1" source="n5" target="n7"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e7" style="orthogonalEdgeStyle;html=1;" edge="1" parent="1" source="n7" target="n8"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e8" style="orthogonalEdgeStyle;html=1;" edge="1" parent="1" source="n8" target="n9"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e9" style="orthogonalEdgeStyle;html=1;" edge="1" parent="1" source="n9" target="n10"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e10" style="orthogonalEdgeStyle;html=1;" edge="1" parent="1" source="n10" target="n11"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- Bridge between phases -->
+        <mxCell id="e11" value="(mais tarde, a cada request)" style="orthogonalEdgeStyle;html=1;dashed=1;" edge="1" parent="1" source="n11" target="r1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- Edges: right column -->
+        <mxCell id="e12" style="orthogonalEdgeStyle;html=1;" edge="1" parent="1" source="r1" target="r2"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e13" style="orthogonalEdgeStyle;html=1;" edge="1" parent="1" source="r2" target="r3"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e14" style="orthogonalEdgeStyle;html=1;" edge="1" parent="1" source="r3" target="r4"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e15" style="orthogonalEdgeStyle;html=1;" edge="1" parent="1" source="r4" target="r5"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e16" style="orthogonalEdgeStyle;html=1;" edge="1" parent="1" source="r5" target="r6"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- Edges: shared state -->
+        <mxCell id="e17" value="escreve" style="orthogonalEdgeStyle;html=1;dashed=1;" edge="1" parent="1" source="n7" target="ms"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e18" value="le" style="orthogonalEdgeStyle;html=1;dashed=1;" edge="1" parent="1" source="ms" target="r4"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e19" value="tipo dos elementos" style="orthogonalEdgeStyle;html=1;dashed=1;" edge="1" parent="1" source="ms" target="mt"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
