@@ -95,7 +95,11 @@ Esperado: `404 Not Found`
 curl -i -X DELETE http://localhost:8080/movies/<id-do-passo-5>
 ```
 
-Esperado: `204 No Content`, sem corpo na resposta.
+Esperado: `200 OK`
+
+```json
+{"message": "Filme removido com sucesso."}
+```
 
 ## 10. Confirmar a remoção
 

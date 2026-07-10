@@ -186,7 +186,7 @@
                 <mxCell id="eq11" style="orthogonalEdgeStyle;html=1;" parent="1" source="q9" target="q10" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="others" value="GET /movies, POST /movies, PUT /movies/{id} e DELETE /movies/{id}&#xa;seguem o mesmo caminho de camadas (Handler -&gt; Service -&gt; Repository -&gt; MongoDB),&#xa;so muda a operacao chamada em cada camada e o codigo de status de sucesso&#xa;(200 para GET/PUT, 201 para POST, 204 para DELETE)." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;align=left;spacingLeft=10;" parent="1" vertex="1">
+                <mxCell id="others" value="GET /movies, POST /movies, PUT /movies/{id} e DELETE /movies/{id}&#xa;seguem o mesmo caminho de camadas (Handler -&gt; Service -&gt; Repository -&gt; MongoDB),&#xa;so muda a operacao chamada em cada camada e o codigo de status de sucesso&#xa;(200 para GET/PUT/DELETE, 201 para POST)." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;align=left;spacingLeft=10;" parent="1" vertex="1">
                     <mxGeometry x="800" y="650" width="640" height="120" as="geometry"/>
                 </mxCell>
                 <mxCell id="b5err" value="Timeout: log de erro&#xa;e script encerra" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">

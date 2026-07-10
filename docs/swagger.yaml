@@ -114,8 +114,14 @@ paths:
       summary: Remove um filme
       operationId: deleteMovie
       responses:
-        "204":
-          description: Filme removido com sucesso, sem corpo na resposta
+        "200":
+          description: Filme removido com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MensagemSucesso"
+              example:
+                message: "Filme removido com sucesso."
         "400":
           description: id informado não é um número inteiro
           content:
@@ -160,3 +166,9 @@ components:
     ErroTexto:
       type: string
       description: Mensagem de erro em texto simples (não é JSON)
+    MensagemSucesso:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Filme removido com sucesso."

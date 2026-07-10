@@ -113,7 +113,7 @@ func (h *MovieHandler) PutUpdateMovie(w http.ResponseWriter, r *http.Request) {
 
 // DeleteMovie trata DELETE /movies/{id}. Lê o ID da URL e delega a remoção
 // ao MovieService. Responde 400 se o ID for inválido, 404 se o filme não
-// existir, ou 204 (sem corpo) em caso de sucesso.
+// existir, ou 200 com uma mensagem de confirmação em caso de sucesso.
 func (h *MovieHandler) DeleteMovie(w http.ResponseWriter, r *http.Request) {
 	idParametro := r.PathValue("id")
 	fmt.Println("Entramos na rota DeleteMovie... ID requisitado:", idParametro)
@@ -130,5 +130,6 @@ func (h *MovieHandler) DeleteMovie(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.WriteHeader(http.StatusNoContent)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{"message": "Filme removido com sucesso."})
 }
