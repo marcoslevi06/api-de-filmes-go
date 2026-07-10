@@ -107,3 +107,15 @@ func descobreProximoId() int {
 
 	return maiorID + 1
 }
+
+
+func Delete(id int) bool {
+	fmt.Println("Entramos no método DELETE...")
+	for indice, filme := range movies {
+		if filme.ID == id {
+			movies = append(movies[:indice], movies[indice+1:]...)
+			return true
+		}
+	}
+	return false
+}

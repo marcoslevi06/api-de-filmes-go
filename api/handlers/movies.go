@@ -83,3 +83,21 @@ func PutUpdateMovie(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(filme)
 }
+
+func DeleteMovie(w http.ResponseWriter, r *http.Request) {
+	idParametro := r.PathValue("id")
+
+	id, err := strconv.Atoi(idParametro)
+	if err != nil {
+		http.Error(w, "ID inválido.", http.StatusBadRequest)
+		return
+	}
+
+	deletado := storage.Delete(id)
+	if !deletado {
+		http.Error(w, "Filme não encontrado - Tente buscar outro ID.", http.StatusNotFound)
+		return
+	}
+
+	w.WriteHeader(http.StatusNoContent)
+}
