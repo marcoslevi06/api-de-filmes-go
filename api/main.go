@@ -37,6 +37,7 @@ func main() {
 	http.HandleFunc("GET /movies", handlers.GetMovies)
 	http.HandleFunc("GET /movies/{id}", handlers.GetMovie)
 	http.HandleFunc("POST /movies", handlers.PostCreateMovie)
+	http.HandleFunc("PUT /movies/{id}", handlers.PutUpdateMovie)
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 

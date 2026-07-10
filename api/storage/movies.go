@@ -47,7 +47,7 @@ func LoadMovies(filename string) error {
 
 func GetAll() []models.Movie {
 	// Método que é responsável por listar todos os filmes existentes.
-	fmt.Println("Entramos no métood GetAll")
+	fmt.Printf("Entramos no métood GetAll - Temos %d filmes", len(movies))
 	return movies
 }
 
@@ -63,9 +63,9 @@ func GetByID(id int) (models.Movie, bool) {
 		if id == filme.ID {
 			filme_requisitado = filme
 			encontrado = true
+			fmt.Printf("Escontramos o filme pedido: %d", filme.ID)
 			return filme_requisitado, encontrado
 		}
-		fmt.Printf("Escontramos o filme pedido: %d", filme.ID)
 	}
 
 	return models.Movie{}, false
@@ -75,8 +75,21 @@ func GetByID(id int) (models.Movie, bool) {
 func Create(filme models.Movie) models.Movie {
 	novo_id := descobreProximoId()
 	filme.ID = novo_id
-	movies = append(movies)
+	movies = append(movies, filme)  
 	return filme
+}
+
+
+func Update(id int, filmeNovo models.Movie) bool {
+	fmt.Println("\nEntramos no método PUT...")
+	for indice, filme := range movies {
+		if filme.ID == id {
+			filmeNovo.ID = id 
+			movies[indice] = filmeNovo
+			return true
+		}
+	}
+	return false
 }
 
 
@@ -84,6 +97,7 @@ func descobreProximoId() int {
 	// Função criada para atribuir um novo id enquanto testo em memória.
 
 	maiorID := 0
+	fmt.Println("Buscando próximo id...")
 
 	for _, filme := range movies {
 		if filme.ID > maiorID {

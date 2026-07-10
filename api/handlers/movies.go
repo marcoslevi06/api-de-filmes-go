@@ -53,4 +53,33 @@ func PostCreateMovie(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(filmeCriado)
+	fmt.Println("PostCreatMovie executado com sucesso")
+}
+
+
+func PutUpdateMovie(w http.ResponseWriter, r *http.Request) {
+	idParametro := r.PathValue("id")
+
+	id, err := strconv.Atoi(idParametro)
+	if err != nil {
+		http.Error(w, "ID inválido.", http.StatusBadRequest)
+		return
+	}
+
+	var filme models.Movie
+	err = json.NewDecoder(r.Body).Decode(&filme)
+	if err != nil {
+		http.Error(w, "Estrutura inválida.", http.StatusBadRequest)
+		return
+	}
+
+	atualizado := storage.Update(id, filme)
+	if !atualizado {
+		http.Error(w, "Filme não encontrado - Tente buscar outro ID.", http.StatusNotFound)
+		return
+	}
+
+	filme.ID = id
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(filme)
 }
