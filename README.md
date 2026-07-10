@@ -9,8 +9,8 @@ Pré-requisito: Docker instalado e com o daemon rodando (não precisa de Go
 nem MongoDB instalados na máquina).
 
 ```bash
-git clone <url-do-repositório>
-cd sipub_teste
+git clone https://github.com/marcoslevi06/api-de-filmes-go.git
+cd api-de-filmes-go
 ./start.sh
 ```
 
@@ -31,7 +31,8 @@ sipub_teste/
 │   ├── api/Dockerfile
 │   └── mongo/Dockerfile
 ├── docs/
-│   ├── fluxograma.drawio     # diagrama da arquitetura e do fluxo
+│   ├── fluxograma.drawio     # diagrama da arquitetura e do fluxo (editável)
+│   ├── fluxograma.png        # o mesmo diagrama, exportado como imagem
 │   ├── testes-curl.md        # roteiro de testes manuais via curl
 │   └── swagger.yaml          # especificação OpenAPI da API
 └── api/
@@ -54,7 +55,9 @@ O projeto segue arquitetura hexagonal: a regra de negócio
 detalhe que pode ser trocado sem mexer na regra de negócio nem no handler
 HTTP.
 
-Diagrama completo em [`docs/fluxograma.drawio`](docs/fluxograma.drawio)
+![Fluxograma da arquitetura: topologia Docker, inicialização via start.sh e ciclo de vida de uma requisição](docs/fluxograma.png)
+
+Arquivo editável em [`docs/fluxograma.drawio`](docs/fluxograma.drawio)
 (abra em [app.diagrams.net](https://app.diagrams.net) ou na extensão
 "Draw.io Integration" do VS Code).
 
